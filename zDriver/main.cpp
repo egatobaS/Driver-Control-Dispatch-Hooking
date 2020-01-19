@@ -3,15 +3,41 @@
 DRIVER_INITIALIZE DriverEntry;
 #pragma alloc_text(INIT, DriverEntry)
 
+//This is a .asm file
+/* 
+.code
+DispatchHook proc
+	add rsp, 8h
+	mov rax, 0DEADBEEFCAFEBEEFh
+	jmp rax
+DispatchHook endp
+
+end
+*/
+
+extern "C" void DispatchHook();
+
 PDRIVER_DISPATCH ACPIOriginalDispatch = 0;
+
+#define IOCTL_DISK_BASE                 FILE_DEVICE_DISK
+#define IOCTL_DISK_GET_DRIVE_GEOMETRY   CTL_CODE(IOCTL_DISK_BASE, 0x0000, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
 
 NTSTATUS CustomDispatch(PDEVICE_OBJECT device, PIRP irp)
 {
 	PIO_STACK_LOCATION ioc = IoGetCurrentIrpStackLocation(irp);
 
 	//Here you can do your custom calls
-	Printf("Got Call with Control code: %X\n", ioc->Parameters.DeviceIoControl.IoControlCode);
 
+	if (ioc->Parameters.DeviceIoControl.IoControlCode == IOCTL_DISK_GET_DRIVE_GEOMETRY)
+	{
+		const char* Buffer = (const char*)irp->AssociatedIrp.SystemBuffer;
+
+		if (Buffer)
+		{
+			Printf("[Hook] Got Call with Control code: %X %s\n", ioc->Parameters.DeviceIoControl.IoControlCode, Buffer);
+		}
+	}
 	return ACPIOriginalDispatch(device, irp);
 }
 
