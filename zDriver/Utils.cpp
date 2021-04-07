@@ -25,7 +25,7 @@ PVOID NTAPI GetKernelProcAddress(LPCWSTR SystemRoutineName)
 	return MmGetSystemRoutineAddress(&Name);
 }
 
-ULONG64 GeModuleBase(const char* Findmodule)
+ULONG64 GetModuleBase(const char* Findmodule)
 {
 	ULONG modulesSize = 0;
 	NTSTATUS ReturnCode = ZwQuerySystemInformation(SystemModuleInformation, 0, modulesSize, &modulesSize);
