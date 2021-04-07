@@ -193,4 +193,4 @@ BOOLEAN bDataCompare( const BYTE* pData, const BYTE* bMask, const char* szMask )
 PVOID ResolveRelativeAddress( PVOID Instruction, ULONG OffsetOffset, ULONG InstructionSize );
 PVOID NTAPI GetKernelProcAddress( LPCWSTR SystemRoutineName );
 UINT64 FindPattern( UINT64 dwAddress, UINT64 dwLen, BYTE *bMask, char * szMask );
-ULONG64 GeModuleBase(const char* Findmodule);
+ULONG64 GetModuleBase(const char* Findmodule);
